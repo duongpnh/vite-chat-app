@@ -1,25 +1,33 @@
 import { useEffect, useRef, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 
+const WEBSOCKET_URL = 'ws://localhost:3003/chat';
+
+type Message = {
+  message: string;
+  type: 'received' | 'sent';
+}
+
 function App() {
   const refMsg = useRef<HTMLInputElement>(null);
-  const [messageHistory, setMessageHistory] = useState<MessageEvent[]>([]);
+  const [messageHistory, setMessageHistory] = useState<Message[]>([]);
   
 
   // establish websocket connection
-  const { readyState, sendMessage, lastMessage } = useWebSocket('ws://localhost:3000/ws', {
-    onOpen: () => {
-      console.log('Established connection')
-    }
+  const { readyState, sendMessage, lastMessage } = useWebSocket(WEBSOCKET_URL, {
+    onOpen: () => console.log('Established connection'),
+    onClose: () => console.log('WebSocket connection closed.'),
+    shouldReconnect: () => true,
   })
 
 
   useEffect(() => {
     if (lastMessage !== null) {
-      setMessageHistory((prev) => prev.concat(lastMessage));
+      setMessageHistory((prev) => prev.concat({
+        type: 'received',
+        message: lastMessage.data,
+      }));
     }
   }, [lastMessage, setMessageHistory]);
 
@@ -27,34 +35,36 @@ function App() {
     const isOpeningConnection = readyState === ReadyState.OPEN;
 
     if (isOpeningConnection && refMsg.current) {
-      sendMessage(refMsg.current.value);
+      const message = refMsg.current.value;
+      sendMessage(message);
+      setMessageHistory((prev) => prev.concat({
+        type: 'sent',
+        message,
+      }))
       refMsg.current.value = '';
     }
   };
 
-  console.log('messageHistory', messageHistory)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="card h-screen flex p-8">
+      <div className="h-full overflow-y-auto">
+        {messageHistory.map((msg: Message, idx: number) => {
+          const isSent = msg.type === 'sent';
+
+          return (
+            <div  key={`${(msg.message || '').slice(0,3)}${idx}`} className={`chat chat-${isSent ? 'end' : 'start'}`}>
+              <div className={`chat-bubble max-w-[250px] break-all chat-bubble-${isSent ? 'info' : 'primary'}`} style={isSent ? { marginRight: '0.75rem', gridColumnStart: 3 } : {}}>{msg.message}</div>
+            </div>
+          )
+        })}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <ul>
-          {messageHistory.map((msg: MessageEvent, idx: number) => <li key={`${(msg.data || '').slice(0,3)}${idx}`}><span>{msg.data}</span></li>)}
-        </ul>
-        <input type="text" placeholder="Message..." name="message" ref={refMsg} required/>
-        <button onClick={onClickSendMessage}>
+      <div className="flex space-x-4 h-30px">
+        <input className="input input-bordered input-primary w-full" type="text" placeholder="Message..." name="message" ref={refMsg} required/>
+        <button className="btn btn-primary" onClick={onClickSendMessage}>
           Send Message
         </button>
       </div>
-    </>
+    </div>
   )
 }
 
