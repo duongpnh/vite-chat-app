@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, useEffect, useRef, useState } from 'react'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
+import { useAuth } from '../../hooks/useAuth';
 // import { GiphyFetch } from '@giphy/js-fetch-api'
 // import { Gif } from '@giphy/react-components'
 // import { SignIn } from './pages/auth/SignIn'
@@ -14,16 +15,17 @@ type Message = {
   };
   type: 'received' | 'sent';
 }
-
-export const Chat = () => {
+const Chat = () => {
 
   const refMsg = useRef<HTMLInputElement>(null);
   const [messageHistory, setMessageHistory] = useState<Message[]>([]);
   const [stickers, setStickers] = useState<any[]>([]);
+  const auth = useAuth();
+  const user = JSON.parse(auth.user || '{}');
   
 
   // establish websocket connection
-  const { readyState, sendMessage, lastMessage } = useWebSocket(WEBSOCKET_URL, {
+  const { readyState, sendMessage, lastMessage } = useWebSocket(`${WEBSOCKET_URL}?access_token=${user.token}`, {
     onOpen: () => console.log('Established connection'),
     onClose: () => console.log('WebSocket connection closed.'),
     shouldReconnect: () => true,
@@ -71,12 +73,13 @@ export const Chat = () => {
 
     if (isOpeningConnection && refMsg.current) {
       const message = refMsg.current.value;
+      console.log('auth.user', user)
       sendMessage(message);
       setMessageHistory((prev) => prev.concat({
         type: 'sent',
         message: {
           content: message,
-          username: 'You',
+          username: user.username as string,
         },
       }))
       refMsg.current.value = '';
@@ -89,7 +92,6 @@ export const Chat = () => {
     }
   };
 
-  console.log('gifs', stickers);
   return (
     <div className="card h-screen flex p-8">
       <div className="h-full overflow-y-auto">
@@ -141,3 +143,5 @@ export const Chat = () => {
     </div>
   )
 }
+
+export default Chat;

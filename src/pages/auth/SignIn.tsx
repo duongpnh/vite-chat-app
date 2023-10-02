@@ -1,8 +1,8 @@
 import { useForm, SubmitHandler } from "react-hook-form"
 import axios from 'axios'
 import { useMutation } from "@tanstack/react-query"
-import { FC } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
+import { useAuth } from "../../hooks/useAuth"
 
 type InputSignIn = {
   username: string
@@ -15,14 +15,24 @@ export const SignIn = () => {
     handleSubmit,
   } = useForm<InputSignIn>()
   const navigate = useNavigate();
+  const location = useLocation();
+  const auth = useAuth();
+  const state = location.state as { from: Location };
+  const from = state ? state.from.pathname : '/chat';
 
   const signInMutation = useMutation({
-    mutationFn: (data: InputSignIn) => axios.post('http://localhost:3000/api/auth/sign-in', data),
-    onSuccess: (data) => {
-      if (data) {
-        localStorage.setItem("userInfo", JSON.stringify(data));
-        console.log("🚀 ~ file: SignIn.tsx:23 ~ SignIn ~ data:", data)
-        navigate("/protected");
+    mutationFn: (data: InputSignIn) => axios.post('http://localhost:3000/api/auth/sign-in', data).then(res => {
+      console.log("🚀 ~ file: SignIn.tsx:25 ~ mutationFn: ~ res:", res)
+      return res;
+    }),
+    onSuccess: (res: any, vars: any, context: any) => {
+      console.log("🚀 ~ file: SignIn.tsx:26 ~ SignIn ~ vars:", vars)
+      console.log("🚀 ~ file: SignIn.tsx:26 ~ SignIn ~ context:", context)
+      if (res.data?.success) {
+        const { username, token } = res.data;
+        auth.signIn(JSON.stringify({ username, token }), () => {
+          navigate(from, { replace: true });
+        })
       }
     },
     onError: (error) => {
