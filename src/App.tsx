@@ -1,9 +1,8 @@
-import './App.css'
-import { AllRoutes } from './route/routes';
+import "./App.css";
+import { AllRoutes } from "./route/routes";
 
 function App() {
-
-  return <AllRoutes />
+  return <AllRoutes />;
 }
 
-export default App
+export default App;

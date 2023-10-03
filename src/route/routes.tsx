@@ -1,8 +1,9 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { SignIn } from "../pages/auth/SignIn";
-import { AuthProvider } from '../providers/AuthProvider';
+import { AuthProvider } from "../providers/AuthProvider";
 import { RequireAuth } from "../components/RequireAuth";
+import { SignUp } from "../pages/auth/SignUp";
 
 const Chat = lazy(() => import("../pages/chat/Chat"));
 
@@ -11,7 +12,8 @@ export const AllRoutes = () => {
     <AuthProvider>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          <Route path="/" element={<SignIn/>} />
+          <Route path="/" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
           <Route element={<RequireAuth />}>
             <Route path="chat" element={<Chat />} />
           </Route>
@@ -19,5 +21,5 @@ export const AllRoutes = () => {
         </Routes>
       </Suspense>
     </AuthProvider>
-  )
-}
+  );
+};
