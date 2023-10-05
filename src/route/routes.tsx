@@ -1,11 +1,11 @@
 import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-import { SignIn } from "../pages/auth/SignIn";
+import { SignIn } from "../containers/auth/SignIn";
 import { AuthProvider } from "../providers/AuthProvider";
 import { RequireAuth } from "../components/RequireAuth";
-import { SignUp } from "../pages/auth/SignUp";
+import { SignUp } from "../containers/auth/SignUp";
 
-const Chat = lazy(() => import("../pages/chat/Chat"));
+const Chat = lazy(() => import("../containers/chat/Chat"));
 
 export const AllRoutes = () => {
   return (

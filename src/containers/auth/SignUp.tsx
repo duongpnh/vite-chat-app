@@ -23,7 +23,7 @@ export const SignUp = () => {
     reset,
     formState: { errors },
   } = useForm<InputSignUp>({
-    // resolver: yupResolver(signUpSchema),
+    resolver: yupResolver(signUpSchema),
   });
   const navigate = useNavigate();
   const location = useLocation();
@@ -57,8 +57,6 @@ export const SignUp = () => {
   const onSubmit: SubmitHandler<InputSignUp> = async (data: InputSignUp) => {
     signUpMutation.mutate(data);
   };
-
-  console.log({ errors });
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">

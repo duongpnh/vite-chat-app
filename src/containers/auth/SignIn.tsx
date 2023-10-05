@@ -1,22 +1,25 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../../hooks/useAuth";
 import { signInSchema } from "./validation-schema/sign-in.schema";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
-type InputSignIn = {
+type TInputSignIn = {
   username: string;
   password: string;
 };
+
+const inputClass =
+  "bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500";
 
 export const SignIn = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<InputSignIn>({
+  } = useForm<TInputSignIn>({
     resolver: yupResolver(signInSchema),
   });
   const navigate = useNavigate();
@@ -26,11 +29,14 @@ export const SignIn = () => {
   const from = state ? state.from.pathname : "/chat";
 
   const signInMutation = useMutation({
-    mutationFn: (data: InputSignIn) =>
-      axios.post("http://localhost:3000/api/auth/sign-in", data).then((res) => {
-        console.log("🚀 ~ file: SignIn.tsx:25 ~ mutationFn: ~ res:", res);
-        return res;
-      }),
+    mutationFn: (data: TInputSignIn) => {
+      return axios
+        .post("http://localhost:3000/api/auth/sign-in", data)
+        .then((res) => {
+          console.log("🚀 ~ file: SignIn.tsx:25 ~ mutationFn: ~ res:", res);
+          return res;
+        });
+    },
     onSuccess: (res: any, vars: any, context: any) => {
       console.log("🚀 ~ file: SignIn.tsx:26 ~ SignIn ~ vars:", vars);
       console.log("🚀 ~ file: SignIn.tsx:26 ~ SignIn ~ context:", context);
@@ -49,15 +55,16 @@ export const SignIn = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<InputSignIn> = async (data: InputSignIn) => {
+  const onSubmit: SubmitHandler<TInputSignIn> = async (
+    payload: TInputSignIn,
+  ) => {
     console.log(
       "🚀 ~ file: SignIn.tsx:15 ~ constonSubmit:SubmitHandler<InputSignIn>= ~ data:",
-      JSON.stringify(data),
+      payload,
     );
-    signInMutation.mutate(data);
+    signInMutation.mutate(payload);
+    // await send(payload);
   };
-
-  console.log({ errors })
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
@@ -94,10 +101,14 @@ export const SignIn = () => {
                   type="text"
                   {...register("username")}
                   id="username"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Username"
+                  className={
+                    inputClass +
+                    (errors.username?.message
+                      ? " dark:border-red-500"
+                      : " dark:border-gray-600")
+                  }
                 />
-                {errors.username && <p>{errors.username.message}</p>}
               </div>
               <div>
                 <label
@@ -111,19 +122,15 @@ export const SignIn = () => {
                   {...register("password")}
                   id="password"
                   placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className={
+                    inputClass +
+                    (errors.password?.message
+                      ? " dark:border-red-500"
+                      : " dark:border-gray-600")
+                  }
                 />
-                {errors.password && <p>{errors.password.message}</p>}
               </div>
               <div className="flex items-center justify-between">
-                {/* <div className="flex items-start">
-                            <div className="flex items-center h-5">
-                              <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required />
-                            </div>
-                            <div className="ml-3 text-sm">
-                              <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Remember me</label>
-                            </div>
-                        </div> */}
                 <a
                   href="#"
                   className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
