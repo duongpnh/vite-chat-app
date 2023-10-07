@@ -5,7 +5,7 @@ import { AuthProvider } from "../providers/AuthProvider";
 import { RequireAuth } from "../components/RequireAuth";
 import { SignUp } from "../containers/auth/SignUp";
 
-const Chat = lazy(() => import("../containers/chat/Chat"));
+const Chat = lazy(() => import("../containers/catalogs"));
 
 export const AllRoutes = () => {
   return (
@@ -15,7 +15,7 @@ export const AllRoutes = () => {
           <Route path="/" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route element={<RequireAuth />}>
-            <Route path="chat" element={<Chat />} />
+            <Route path="catalogs" element={<Chat />} />
           </Route>
           <Route path="*" element={<p>There's nothing here: 404!</p>} />
         </Routes>

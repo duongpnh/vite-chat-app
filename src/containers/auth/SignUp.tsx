@@ -59,68 +59,59 @@ export const SignUp = () => {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a
-          href="#"
-          className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-        >
-          <img
-            className="w-8 h-8 mr-2"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-            alt="logo"
-          />
-          Chat App
-        </a>
+    <section className="bg-gray-50 dark:bg-gray-900 h-full">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0 h-full">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to your account
+              Sign up your account
             </h1>
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="space-y-4 md:space-y-6"
               action="#"
             >
-              <div>
-                <label
-                  htmlFor="firstName"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
-                >
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  {...register("firstName", { required: true })}
-                  id="firstName"
-                  placeholder="First Name"
-                  className={
-                    inputClass +
-                    (errors.firstName?.message
-                      ? " dark:border-red-500"
-                      : " dark:border-gray-600")
-                  }
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="lastName"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
-                >
-                  Last Name
-                </label>
-                <input
-                  type="lastName"
-                  {...register("lastName", { required: true })}
-                  id="lastName"
-                  placeholder="Last Name"
-                  className={
-                    inputClass +
-                    (errors.lastName?.message
-                      ? " dark:border-red-500"
-                      : " dark:border-gray-600")
-                  }
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="firstName"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    {...register("firstName", { required: true })}
+                    id="firstName"
+                    placeholder="First Name"
+                    className={
+                      inputClass +
+                      (errors.firstName?.message
+                        ? " dark:border-red-500"
+                        : " dark:border-gray-600")
+                    }
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="lastName"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
+                  >
+                    Last Name
+                  </label>
+                  <input
+                    type="lastName"
+                    {...register("lastName", { required: true })}
+                    id="lastName"
+                    placeholder="Last Name"
+                    className={
+                      inputClass +
+                      (errors.lastName?.message
+                        ? " dark:border-red-500"
+                        : " dark:border-gray-600")
+                    }
+                  />
+                </div>
               </div>
               <div>
                 <label
@@ -144,45 +135,47 @@ export const SignUp = () => {
                   placeholder="Email"
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  {...register("password", { required: true })}
-                  id="password"
-                  placeholder="••••••••"
-                  className={
-                    inputClass +
-                    (errors.password?.message
-                      ? " dark:border-red-500"
-                      : " dark:border-gray-600")
-                  }
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="passwordConfirm"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
-                >
-                  Password Confirm
-                </label>
-                <input
-                  type="password"
-                  {...register("passwordConfirm")}
-                  id="passwordConfirm"
-                  placeholder="••••••••"
-                  className={
-                    inputClass +
-                    (errors.passwordConfirm?.message
-                      ? " dark:border-red-500"
-                      : " dark:border-gray-600")
-                  }
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
+                  >
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    {...register("password", { required: true })}
+                    id="password"
+                    placeholder="••••••••"
+                    className={
+                      inputClass +
+                      (errors.password?.message
+                        ? " dark:border-red-500"
+                        : " dark:border-gray-600")
+                    }
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="passwordConfirm"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-left"
+                  >
+                    Password Confirm
+                  </label>
+                  <input
+                    type="password"
+                    {...register("passwordConfirm")}
+                    id="passwordConfirm"
+                    placeholder="••••••••"
+                    className={
+                      inputClass +
+                      (errors.passwordConfirm?.message
+                        ? " dark:border-red-500"
+                        : " dark:border-gray-600")
+                    }
+                  />
+                </div>
               </div>
               <div className="flex items-center justify-between">
                 {/* <div className="flex items-start">
